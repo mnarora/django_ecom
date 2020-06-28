@@ -1,0 +1,30 @@
+{% extends 'assistant/basic.html' %}
+  {% block body %}
+    <div class="ml-5 mt-3">
+        <h3>Hello sir, What can I do for you?</h1>
+    </div>
+
+    <div class = "container mt-4">
+        <div class="row">
+            {% for i in tasklist %}
+            <div class="col-sm-4">
+                <div class="card-group" >
+                
+                <a href = "{% url 'todolist' %}"><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
+                <div class="card-body">
+                    <h5 class="card-title">{{i.task_name}}</h5>
+                    <p class="card-text">{{i.task_desc}}</p>
+                </div>
+              </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 and forloop.counter > 0 and not forloop.last %}
+                </div><div class = "row">
+            {% endif %}
+        {% endfor %}
+        </div>
+        </div>
+    {% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
