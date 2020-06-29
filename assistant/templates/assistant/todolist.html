@@ -1,4 +1,46 @@
 {% extends 'assistant/basic.html' %}
 {% block body %}
-<h1>HI</h1>
+<div class = "container mt-4">
+<form action = "/todolist/0/add" method = 'POST'>
+  {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" name = "title" id="title" aria-describedby="emailHelp" required>
+        <small id="emailHelp" class="form-text text-muted">Add an item to the list</small>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" name = "description" id="description" rows="3" required></textarea>
+    </div>
+    <a href="{% url 'tolist' idz=0 typer='add' %}"><button class="btn btn-primary">Add to List</button></a>
+  </form>
+    <a href = "{% url 'tolist' idz=0 typer='clear' %}"><button class = "btn btn-warning mt-2">Clear All</button></a>
+    <div id="items" class="my-4">
+        <h2>Your Items</h2>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">SNo</th>
+                <th scope="col">Item Title</th>
+                <th scope="col">Item Description</th> 
+                <th scope="col">Actions</th> 
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for i in tasklist %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{i.title}}</td>
+                <td>{{i.Description}}</td> 
+                <td><a href="{% url 'tolist' idz=forloop.counter typer='del' %}"><button class="btn btn-sm btn-primary">Delete</button></a></td> 
+              </tr>
+              {% endfor %}
+              
+            </tbody>
+          </table>
+    </div>
+
+</div>
 {% endblock %}

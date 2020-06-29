@@ -17,7 +17,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <a class="navbar-brand" href="#">Personal Assistant</a>
+          <a class="navbar-brand" href="{% url 'assistant' %}">Personal Assistant</a>
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
               <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
@@ -27,13 +27,113 @@
             </li>
           </ul>
           <ul class="navbar-nav mr-3 mt-2 mt-lg-0">
+            {% if user.is_authenticated %}
+                <h4 style= "color:white;">You are logged in as {{request.user}}</h2>
+                  <li class="nav-item active ml-4">
+                    <a href="{% url 'LogOut' %}"><button type="button" class="btn btn-primary">
+                      Log Out
+                    </button></a>
+                  </li>
+            {% else %}
             <li class="nav-item active">
-                <a class="nav-link" href="#">Link</a>
-              </li>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+                Log In
+              </button>
+            </li>
+            <li class="nav-item active">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signupModal">
+                Sign Up
+              </button>
+          </li>
+          {% endif %}
         </ul>   
         </div>
         </div>
       </nav>
+      <!-- Button trigger Sign Up modal -->
+
+
+<!--Sign Up Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signupModaltitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form  action='/signup' method = 'POST'>
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="uname">Username</label>
+            <input type="text" class="form-control" name="uname" aria-describedby="emailHelp" required>
+          </div>
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" name="fname"aria-describedby="emailHelp" required>
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" name="lname"aria-describedby="emailHelp" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+          </div>
+          <div class="form-group">
+            <label for="pass1">Password</label>
+            <input type="password" class="form-control" name="pass1" id="exampleInputPassword1" required>
+          </div>
+          <div class="form-group">
+            <label for="pass2">Re-enter your Password</label>
+            <input type="password" class="form-control" name="pass2"id="exampleInputPassword1" required>
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger Sign Up modal -->
+
+<!--Sign Up Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModaltitle">Log In</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/login" method = "POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="loginuname">Username</label>
+            <input type="text" name="loginuname" class="form-control" aria-describedby="emailHelp" required>
+          </div>
+          <div class="form-group">
+            <label for="loginpass">Enter Your Password</label>
+            <input type="password" name="loginpass" class="form-control" id="exampleInputPassword1" required>
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
       {% block body %}
     {% endblock %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

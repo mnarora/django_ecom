@@ -8,3 +8,9 @@ class task(models.Model):
     task_url = models.CharField(max_length = 20, default = '#')
     def __str__(self):
         return self.task_name
+
+class todolist(models.Model):
+    title = models.CharField(max_length = 80)
+    Description = models.CharField(max_length = 300)
+    def __str__(self):
+        return self.title
