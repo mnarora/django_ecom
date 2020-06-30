@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
+from matplotlib import pyplot as plt 
 from django.http import HttpResponse
 from .models import task
 from .models import todolist
+from .models import ExpenseInfo
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+import warnings
+import datetime
+
 # Create your views here.
 def assistant(request):
     tasks = task.objects.all()
@@ -74,5 +79,32 @@ def Logout(request):
     messages.success(request, "Successfully logged out")
     return redirect('assistant')
 
-def Expense(request):
-    return render(request, 'assistant/expense.html')
+def Expense(request, idz, typer):
+    if request.POST and typer == 'add':
+        mtitle = request.POST.get('title', 'default')
+        mdescription = request.POST.get('amount', 'default')
+        expdate = request.POST.get('amountdate', 'default')
+        d = datetime.date(int(expdate[:4]), int(expdate[5:7]), int(expdate[8:10]))
+        print(d)
+        expcat = request.POST.get('expcateg', 'default')
+        tolist = ExpenseInfo(expense_item = mtitle, expense_cost = mdescription, date_added = d, expense_cat = expcat)
+        tolist.save()
+    if typer == 'del':
+        a = ExpenseInfo.objects.all()
+        a[idz - 1].delete()
+    if typer == 'clear':
+        a = ExpenseInfo.objects.all()
+        a.delete()
+    emp ={}
+    tasks = ExpenseInfo.objects.all()
+    for i in tasks:
+        if i.expense_cat in emp:
+            emp[i.expense_cat] += i.expense_cost
+        else:
+            emp[i.expense_cat] = i.expense_cost
+    warnings.simplefilter('ignore')
+    fig = plt.figure(figsize =(6, 4)) 
+    plt.pie(list(emp.values()), labels = list(emp.keys())) 
+    plt.savefig('media/assistant/images/expense.jpg') 
+    params ={'tasklist' : tasks, 'pie' : len(emp)}
+    return render(request, 'assistant/expense.html', params)

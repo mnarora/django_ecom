@@ -10,7 +10,7 @@
             <div class="col-sm-4">
                 <div class="card-group" >
                 
-                <a href ="{% url 'tolist' idz=0 typer='non'%}"><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
+                <a href = "{% url 'Expense' idz=0 typer='none2' %}"><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
                 <div class="card-body">
                     <h5 class="card-title">{{i.task_name}}</h5>
                     <p class="card-text">{{i.task_desc}}</p>

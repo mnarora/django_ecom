@@ -1,3 +1,72 @@
 {% extends 'assistant/basic.html' %}
 {% block body %}
+    <h3 class="mt-3 ml-5">Manage your expenses</h3>
+    <div class = "container mt-4 mb-5">
+        <form action = "/expense/0/add" method = 'POST'>
+          {% csrf_token %}
+            <div class = "form-row">
+            <div class="form-group  col-md-6">
+                <label for="title">Amount Spent on</label>
+                <input type="text" class="form-control" name = "title" id="title" aria-describedby="emailHelp" required>
+            </div>
+        
+            <div class="form-group ml-5">
+                <label for="description">Amount</label><br>
+                <input type="number" name = "amount" class="form-control" id="amount" required>
+            </div>
+          </div>
+            <div class="form-group col-md-4 mr-5">
+              <label for="inputcategory">Category</label>
+              <select id="inputcategory" class="form-control" name="expcateg">
+                <option selected>Choose...</option>
+                <option>Housing</option>
+                <option>Transport</option>
+                <option>Education and Child Care</option>
+                <option>Food</option>
+                <option>Clothing</option>
+                <option>Others</option>
+              </select>
+            </div>
+            <div class="form-group">
+                <label for="amountdate">When did you spent this amount?</label><br>
+                <input type="date" id="amountdate" name="amountdate" required>
+            </div>
+            <a href="#"><button class="btn btn-primary">Add your expense</button></a>
+            
+          
+          </form>
+          <a href = "{% url 'Expense' idz=0 typer='clear' %}"><button class = "btn btn-warning mt-5">Clear All</button></a><br>
+          {% if pie != 0 %}
+          
+          <img src="/media/assistant/images/expense.jpg" class="rounded" alt="..."><br>
+          {% endif %}
+    <div id="items" class="my-4">
+        <h2>Your Items</h2>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">SNo</th>
+                <th scope="col">Expense Item</th>
+                <th scope="col">Category</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th> 
+                <th scope="col">Actions</th> 
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for i in tasklist %}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{i.expense_item}}</td>
+                <td>{{i.expense_cat}}</td>
+                <td>{{i.expense_cost}}</td>
+                <td>{{i.date_added}}</td> 
+                <td><a href="{% url 'Expense' idz=forloop.counter typer='del' %}"><button class="btn btn-sm btn-primary">Delete</button></a></td> 
+              </tr>
+              {% endfor %}
+              
+            </tbody>
+          </table>
+    </div>
+  </div>
 {% endblock %}

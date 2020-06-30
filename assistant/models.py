@@ -14,3 +14,11 @@ class todolist(models.Model):
     Description = models.CharField(max_length = 300)
     def __str__(self):
         return self.title
+
+class ExpenseInfo(models.Model):
+    expense_item = models.CharField(max_length=80)
+    expense_cost = models.FloatField()
+    date_added = models.DateField()
+    expense_cat = models.CharField(max_length=10, default = 'Others')
+    def __str__(self):
+        return self.expense_item

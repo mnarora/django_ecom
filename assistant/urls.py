@@ -9,5 +9,5 @@ urlpatterns = [
     path('login', views.Login, name = 'LogIn'),
     path('signup', views.Signup, name = 'SignUp'),
     path('logout', views.Logout, name = 'LogOut'),
-    path('expense', views.Expense, name = 'Expense'),
+    path('expense/<int:idz>/<str:typer>', views.Expense, name = 'Expense'),
 ]
