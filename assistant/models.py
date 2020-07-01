@@ -22,3 +22,9 @@ class ExpenseInfo(models.Model):
     expense_cat = models.CharField(max_length=10, default = 'Others')
     def __str__(self):
         return self.expense_item
+
+class Goals(models.Model):
+    Goals_desc = models.CharField(max_length = 40)
+    Goals_prog = models.IntegerField(default = 0)
+    def __str__(self):
+        return self.Goals_desc

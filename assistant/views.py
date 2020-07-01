@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import task
 from .models import todolist
 from .models import ExpenseInfo
+from .models import Goals
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -17,7 +18,6 @@ def assistant(request):
     return render(request, 'assistant/index.html', params)
 
 def todoList(request, idz, typer):
-    print(typer)
     if request.POST and typer == 'add':
         mtitle = request.POST.get('title', 'default')
         mdescription = request.POST.get('description', 'default')
@@ -108,3 +108,30 @@ def Expense(request, idz, typer):
     plt.savefig('media/assistant/images/expense.jpg') 
     params ={'tasklist' : tasks, 'pie' : len(emp)}
     return render(request, 'assistant/expense.html', params)
+
+def goals(request, idz, typer):
+    if request.POST and typer == 'add':
+        goal_name  = request.POST.get('title', 'default')
+        goal_prog = request.POST.get('goalprog', 'default')
+        goal = Goals(Goals_desc = goal_name, Goals_prog = goal_prog)
+        goal.save()
+    if request.POST and typer == 'edit':
+        a = Goals.objects.all()
+        b = Goals.objects.get(Goals_desc = a[idz - 1].Goals_desc)
+        b.Goals_prog = request.POST.get('goalProg')
+        b.save()
+    if typer == 'del' and len(Goals.objects.all()) != 0:
+        a = Goals.objects.all()
+        a[idz - 1].delete()
+    if typer == 'clear':
+        a = Goals.objects.all()
+        a.delete()
+    tasks = Goals.objects.all()
+    
+    sum = 0
+    if len(tasks) != 0:
+        for i in tasks:
+            sum += i.Goals_prog
+        sum /= len(tasks)
+    params ={'tasklist' : tasks, 'perc':sum}
+    return render(request, 'assistant/goals.html', params)
