@@ -1,0 +1,49 @@
+{% extends 'assistant/basic.html' %}
+{% block body %}
+    <h3 class = "mt-5 ml-3">What can I do for you?</h3>
+    <h4 style = "margin-left: 150px;" class = "mt-3">I can send a mail</h4>
+    <div class = "container">
+        
+        <form action = "/minigoogle/email" method = 'POST'>
+            {% csrf_token %}
+            <div class = "form-row ml-2">
+                <div class="form-group col-md-3">
+                  <label for="sendersemail">Enter your Email</label>
+                  <input type="email" class="form-control" id="sendersemail" name = "sendersemail" aria-describedby="emailHelp" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="senderspass">Password</label>
+                  <input type="password" class="form-control" name = "senderspass" id="senderspass" required>
+                </div>
+            </div>
+            <div class = "form-group col-md-3">
+                <label for="recipientsemail">Enter Reciepients Email</label>
+                <input type="email" class="form-control" name="recipientsemail" required>
+            </div>
+            <div class = "form-group col-md-4">
+                <label for = "subject">Subject</label>
+                <textarea class="form-control" id="subject" name = "subject" rows="1"></textarea>
+            </div>
+            <div class = "form-group col-md-6">
+                <label for = "emailmessage">Message</label>
+                <textarea class="form-control" id="emailmessage" name = "emailmessage" rows="4"></textarea>
+            </div>
+            <a href = "#"><button class = "btn btn-primary ml-2">Send Mail</button></a>
+        </form>
+    </div>
+        <h4 style = "margin-left: 150px;" class = "mt-5">I can search in wikipedia</h4>
+        <div class = "container">
+        <form action = "/minigoogle/search" method = 'POST'>
+            {% csrf_token %}
+            <div class = "form-group col-md-4 mt-1">
+                <label for = "searchtext">What do you want to search?</label>
+                <textarea class="form-control" id="searchtext" name = "searchtext" rows="1"></textarea>
+            </div>
+            <button class = "btn btn-primary ml-2">Search Wikipedia</button> 
+        </form>
+            <h5 class = "ml-5 mt-4">{{tasklist}}</h5>
+        
+
+        </div>
+
+{% endblock %}

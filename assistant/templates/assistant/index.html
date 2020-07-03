@@ -1,4 +1,9 @@
 {% extends 'assistant/basic.html' %}
+{% block css %}
+    .card-img-top {
+        height:200px;
+    }
+{% endblock %}
   {% block body %}
     <div class="ml-5 mt-3">
         <h3>Hello sir, What can I do for you?</h1>
@@ -10,7 +15,7 @@
             <div class="col-sm-4">
                 <div class="card-group" >
                 
-                <a href = "{% url 'goals' idz=0 typer='none2' %}"><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
+                <a href = "{{i.task_url}}"><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
                 <div class="card-body">
                     <h5 class="card-title">{{i.task_name}}</h5>
                     <p class="card-text">{{i.task_desc}}</p>

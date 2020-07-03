@@ -1,0 +1,22 @@
+{% extends 'assistant/basic.html' %}
+{% block body %}
+    <form action = "/birthday/0/add" method='POST'>
+        {% csrf_token %}
+        <div class = "container mt-5">
+            <div class = "form-row">
+                <div class="form-group col-md-4">
+                    <label for="frename">Enter Your Friends name </label>
+                    <input type="text" class="form-control" name = "frename" id="title" aria-describedby="emailHelp" required>
+                </div>
+                <div class="form-group col-md-2 ml-5">
+                    <label for="birthdate">Enter his Birthdate</label>
+                    <input type="date" id="birthdate" class = "form-control" name="birthdate" required>
+                </div> 
+            </div>
+                <div class="form-group">
+                    <a href="#"><button class="btn btn-primary">Save Your Friends Birthday</button></a>
+                </div>
+            
+        </div>
+    </form>
+{% endblock %}
