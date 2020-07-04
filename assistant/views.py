@@ -94,17 +94,40 @@ def goals(request, idz, typer):
     return render(request, 'assistant/goals.html', params)
 
 def birthday(request, idz, typer):
+    tasks = Bday.objects.all()
     if request.POST and typer == 'add':
         fr_name = request.POST.get('frename', 'default')
         fr_date = request.POST.get('birthdate')
         d = datetime.date(int(fr_date[:4]), int(fr_date[5:7]), int(fr_date[8:10]))
         temp = Bday(bday_name = fr_name, bday_date = d)
         temp.save()
-    tasks = Bday.objects.all()
+        messages.success(request, fr_name +"'s birth date saved successfully")
+        tasks = Bday.objects.all()
+        tasks = list(tasks)
+        for i in range(len(tasks)):
+            min_idx = i
+            for j in range(i+1, len(tasks)):
+                if tasks[min_idx].bday_date.month >= tasks[j].bday_date.month: 
+                    min_idx = j      
+            tasks[i], tasks[min_idx] = tasks[min_idx], tasks[i]
+        presentmonth = datetime.date.today().month
+        for i in range(len(tasks)):
+            if tasks[i].bday_date.month <= presentmonth:
+                break
+        tasks = tasks[i:] + tasks[:i]
+    todaybday = []
+    flag = 0
     for i in tasks:
         if i.bday_date.month == datetime.date.today().month and i.bday_date.day == datetime.date.today().day:
+            todaybday.append(i)
             messages.success(request, "Its " + i.bday_name+"'s birthday today.")
-    params = {'tasklist':tasks}
+            flag = 1
+    
+    if flag:
+        tasks = tasks[len(todaybday):]
+        params = {'tasklist':tasks, 'todaybday':todaybday} 
+    else:
+        params = {'tasklist':tasks}
     return render(request, 'assistant/bday.html', params)
     
 def miniGoogle(request, task):
@@ -122,16 +145,6 @@ def miniGoogle(request, task):
         msg['To'] = request.POST.get('recipientsemail')
         s.send_message(msg)
         s.quit()
-        """s = smtplib.SMTP('smtp.gmail.com', 587)
-        s.starttls() 
-        s.login(senemail, request.POST.get("senderpass", ""))
-        msg = EmailMessage()
-        msg.set_content(request.POST.get("emailmessage", ""))
-        msg['Subject'] = request.POST.get("subject", "")
-        msg['From'] = "wethestockedpantry@gmail.com"
-        msg['To'] = "mnarora2000@gmail.com"
-        s.send_message(msg)
-        s.quit()"""
         messages.success(request, "Email sent successfully")
     if request.POST and task == 'search':
         query = request.POST.get('searchtext')

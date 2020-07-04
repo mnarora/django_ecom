@@ -1,5 +1,6 @@
 {% extends 'assistant/basic.html' %}
 {% block body %}
+{% load mathfilters %}
     <form action = "/birthday/0/add" method='POST'>
         {% csrf_token %}
         <div class = "container mt-5">
@@ -19,4 +20,74 @@
             
         </div>
     </form>
+    
+    {% if todaybday %}
+    <h4 class = "mt-4" style ="margin-left: 200px;">Today's Birthday</h4>
+        <div class = "container">
+            <table class = "table">
+                <thead>
+                    <tr>
+                      <th scope="col">Sr No.</th>
+                      <th scope="col">Friend's Name</th>
+                      <th scope="col">Birthdate</th>
+                      <th scope="col">Age</th>
+                      <th scope="col">Wish</th>
+                      <th scope="col">Delete</th>
+                    </tr>
+                  </thead>
+                <tbody>
+                {% for i in todaybday %}
+                <tr>
+                    <th class = "row">{{forloop.counter}}</th>
+                    <td>{{i.bday_name}}</td>
+                    <td>{{i.bday_date}}</td>
+                    <td>{{2020|sub:i.bday_date.year}}</td>
+                    <td>
+                    <button class = "btn btn-primary">Wish him</button>
+                </td>
+                <td>
+                    <button class = "btn btn-primary ">Delete</button>
+                </td>
+            </tr> 
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        
+    {% endif %}
+    {% if tasklist %}
+    <h4 class = "mt-4" style ="margin-left: 200px;">Recent Birthday</h4>
+    
+        <div class = "container">
+            <table class = "table">
+                <thead>
+                    <tr>
+                      <th scope="col">Sr No.</th>
+                      <th scope="col">Friend's Name</th>
+                      <th scope="col">Birthdate</th>
+                      <th scope="col">Age</th>
+                      <th scope="col">Wish</th>
+                      <th scope="col">Delete</th>
+                    </tr>
+                  </thead>
+                <tbody>
+                {% for i in tasklist %}
+                <tr>
+                    <th class = "row">{{forloop.counter}}</th>
+                    <td>{{i.bday_name}}</td>
+                    <td>{{i.bday_date}}</td>
+                    <td>{{2020|sub:i.bday_date.year}}</td>
+                    <td>
+                    <button class = "btn btn-primary ">Wish him</button>
+                </td>
+                <td>
+                    <button class = "btn btn-primary ">Delete</button>
+                </td>
+            </tr> 
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    {% endif %}
+
 {% endblock %}
