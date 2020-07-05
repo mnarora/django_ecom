@@ -1,4 +1,19 @@
 {% extends 'assistant/basic.html' %}
+{% block css %}
+body {
+    
+  background-image : url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQPSdqIt1PcktvdDsdtiXs0i8cmtffTrf0Big&usqp=CAU');
+
+height: 100%; 
+background-attachment: fixed;
+background-repeat: no-repeat;
+background-size: cover;
+background-size: 1800px 1200px;
+}
+.container {
+    font-size:22px;
+}
+{% endblock %}
 {% block body %}
 <div class = "container mt-4">
     <div class  = "jumbotron">
@@ -8,11 +23,11 @@
     {% csrf_token %}
       
       <div class="form-group mt-5">
-          <label for="title">Set up Your Goal</label>
+          <label for="title"><b>Set up Your Goal</b></label>
           <input type="text" class="form-control col-md-6" name = "title" id="title" aria-describedby="emailHelp" required>
       </div>
       <div class = "form-group">
-          <label for="goalprog">Set up your Goal Progress</label>
+          <label for="goalprog"><b>Set up your Goal Progress</b></label>
           <input type="number" min = 0 max = 100 class = "form-control col-md-1" name = "goalprog" >
       </div>
       <div class="form-group">
@@ -28,9 +43,9 @@
         <div class="progress-bar bg-success" role="progressbar" style="width: {{perc}}%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
         {% endif %}
       </div>
-    <table class="table table-hover">
+    <table class="table table-hover" >
         <thead>
-          <tr>
+          <tr style = "color:white;">
             <th scope="col">Sr No.</th>
             <th scope="col">Goal Description</th>
             <th scope="col">Progress</th>
@@ -39,7 +54,7 @@
         </thead>
         <tbody>
         {% for i in tasklist %}
-          <tr>
+          <tr style = "color:white;">
               
              
             <th scope="row">{{forloop.counter}}</th>

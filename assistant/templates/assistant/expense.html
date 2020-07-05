@@ -1,5 +1,15 @@
 {% extends 'assistant/basic.html' %}
+{% block css %}
+body {
+    background-color : #DEF8FA;
+}
+{% endblock %}
 {% block body %}
+<div class = "container mt-4">
+  <div class  = "jumbotron">
+      <h4 style = "text-align: center;"><i>&quotAlways keep a hawk eye on your Bills and Expenses.&quot</i></h4>
+  </div>
+  </div>
     <h3 class="mt-3 ml-5">Manage your expenses</h3>
     <div class = "container mt-4 mb-5">
         <form action = "/expense/0/add" method = 'POST'>

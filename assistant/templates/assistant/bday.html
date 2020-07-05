@@ -1,4 +1,10 @@
 {% extends 'assistant/basic.html' %}
+{% block css %}
+body {
+    background-color: #DFDFD7;
+}
+{% endblock %}
+
 {% block body %}
 {% load mathfilters %}
     <form action = "/birthday/0/add" method='POST'>
@@ -14,9 +20,10 @@
                     <input type="date" id="birthdate" class = "form-control" name="birthdate" required>
                 </div> 
             </div>
-                <div class="form-group">
-                    <a href="#"><button class="btn btn-primary">Save Your Friends Birthday</button></a>
-                </div>
+
+            <div class="form-group">
+                <a href="#"><button class="btn btn-primary">Save Your Friends Birthday</button></a>
+            </div>
             
         </div>
     </form>
@@ -43,7 +50,9 @@
                     <td>{{i.bday_date}}</td>
                     <td>{{2020|sub:i.bday_date.year}}</td>
                     <td>
-                    <button class = "btn btn-primary">Wish him</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#wishModal">
+                            Wish him
+                          </button>
                 </td>
                 <td>
                     <button class = "btn btn-primary ">Delete</button>
@@ -66,7 +75,6 @@
                       <th scope="col">Friend's Name</th>
                       <th scope="col">Birthdate</th>
                       <th scope="col">Age</th>
-                      <th scope="col">Wish</th>
                       <th scope="col">Delete</th>
                     </tr>
                   </thead>
@@ -77,17 +85,55 @@
                     <td>{{i.bday_name}}</td>
                     <td>{{i.bday_date}}</td>
                     <td>{{2020|sub:i.bday_date.year}}</td>
-                    <td>
-                    <button class = "btn btn-primary ">Wish him</button>
-                </td>
                 <td>
-                    <button class = "btn btn-primary ">Delete</button>
+                    <a href = "{% url 'biday' idz=forloop.counter typer='del' %}"><button class = "btn btn-primary ">Delete</button></a>
                 </td>
             </tr> 
                 {% endfor %}
             </tbody>
             </table>
         </div>
-    {% endif %}
+        {% endif %}
+        <div class="modal fade" id="wishModal" tabindex="-1" role="dialog" aria-labelledby="wishModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="wishModaltitle">Wish Your Friend</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="/birthday/0/wish" method = "POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="form-group">
+                          <div class="form-group">
+                            <label for="useremail">Enter Your email</label>
+                            <input type="email" class="form-control" name="useremail" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="userpass">Password</label>
+                            <input type="password" class="form-control" name="userpass" id="exampleInputPassword1" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="friendsemail">Enter Your Friends email</label>
+                            <input type="email" class="form-control" name="friendsemail"id="exampleInputPassword1" required>
+                          </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Wish</button>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <div class="modal-footer">
+                          </div>
+                          
+                
+                  </form>
+                  
+                </div>
+          
+              </div>
+            </div>
+        </div>
+
 
 {% endblock %}

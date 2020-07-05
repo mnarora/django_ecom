@@ -25,12 +25,7 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
           <a class="navbar-brand" href="{% url 'assistant' %}">Personal Assistant</a>
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
+           
           </ul>
           <ul class="navbar-nav mr-3 mt-2 mt-lg-0">
             {% if user.is_authenticated %}
@@ -42,7 +37,7 @@
                   </li>
             {% else %}
             <li class="nav-item active">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+              <button type="button" class="btn btn-primary mr-3" data-toggle="modal" data-target="#loginModal">
                 Log In
               </button>
             </li>
@@ -106,12 +101,16 @@
             <label for="pass2">Re-enter your Password</label>
             <input type="password" class="form-control" name="pass2"id="exampleInputPassword1" required>
           </div>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
           <button type="submit" class="btn btn-primary">Sign Up</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </form>
       </div>
 
       <div class="modal-footer">
+        <small class="text-muted">
+          Already have an Account?<a href = "#loginModal" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Log In</a>
+        </small>
       </div>
     </div>
   </div>
@@ -140,12 +139,17 @@
             <label for="loginpass">Enter Your Password</label>
             <input type="password" name="loginpass" class="form-control" id="exampleInputPassword1" required>
           </div>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
           <button type="submit" class="btn btn-primary">Log In</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </form>
+        
       </div>
 
       <div class="modal-footer">
+        <small class="text-muted">
+          Need an Account?<a href = "#signupModal" data-dismiss="modal" data-toggle="modal" data-target="#signupModal">Sign Up</a>
+        </small>
       </div>
     </div>
   </div>

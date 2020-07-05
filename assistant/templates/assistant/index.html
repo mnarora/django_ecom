@@ -3,6 +3,16 @@
     .card-img-top {
         height:200px;
     }
+    body {
+    
+        background-image : url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkhZ4pYdUbmRa4Xv52Ldp9DwJAGcl7M_VovhjaV7cN8ei9tYpzmMCrrgbI&s=10');
+     
+  height: 100%; 
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+ }
+    
 {% endblock %}
   {% block body %}
     <div class="ml-5 mt-3">
@@ -14,10 +24,15 @@
             {% for i in tasklist %}
             <div class="col-sm-4">
                 <div class="card-group" >
+                <a href = 
+                {% if user.is_authenticated %}
                 
-                <a href = "{{i.task_url}}"><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
+                "{{i.task_url}}"
+                {% else %}
+                "#loginModal" data-toggle="modal" data-target="#loginModal"
+                {% endif %}><img class="card-img-top" src="media/{{i.task_ima}}" alt="Card image cap"></a>
                 <div class="card-body">
-                    <h5 class="card-title">{{i.task_name}}</h5>
+                    <h5 class="card-title"><b>{{i.task_name}}</b></h5>
                     <p class="card-text">{{i.task_desc}}</p>
                 </div>
               </div>

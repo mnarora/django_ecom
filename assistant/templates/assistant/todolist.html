@@ -1,4 +1,9 @@
 {% extends 'assistant/basic.html' %}
+{% block css %}
+body {
+  background-color: #DFDFD7;
+}
+{% endblock %}
 {% block body %}
 <div class = "container mt-4">
 <form action = "/todolist/0/add" method = 'POST'>

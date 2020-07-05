@@ -6,6 +6,8 @@ from .models import todolist
 from .models import ExpenseInfo
 from .models import Goals
 from .models import Bday
+from .models import Passstore
+from .models import Images
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -14,26 +16,29 @@ import datetime
 import smtplib
 from email.message import EmailMessage
 import wikipedia
+#from cryptography.fernet import Fernet
+
 
 # Create your views here.
 def assistant(request):
     tasks = task.objects.all()
-    params ={'tasklist' : tasks}
+    ima = Images.objects.all()
+    params ={'tasklist' : tasks, 'image':ima}
     return render(request, 'assistant/index.html', params)
 
 def todoList(request, idz, typer):
     if request.POST and typer == 'add':
         mtitle = request.POST.get('title', 'default')
         mdescription = request.POST.get('description', 'default')
-        tolist = todolist(title = mtitle, Description = mdescription)
+        tolist = todolist(title = mtitle, Description = mdescription, user = request.user)
         tolist.save()
     if typer == 'del':
-        a = todolist.objects.all()
+        a = todolist.objects.filter(user = request.user)
         a[idz - 1].delete()
     if typer == 'clear':
-        a = todolist.objects.all()
+        a = todolist.objects.filter(user = request.user)
         a.delete()
-    tasks = todolist.objects.all()
+    tasks = todolist.objects.filter(user = request.user)
     params ={'tasklist' : tasks}
     return render(request, 'assistant/todolist.html', params)
 
@@ -44,16 +49,16 @@ def Expense(request, idz, typer):
         expdate = request.POST.get('amountdate', 'default')
         d = datetime.date(int(expdate[:4]), int(expdate[5:7]), int(expdate[8:10]))
         expcat = request.POST.get('expcateg', 'default')
-        tolist = ExpenseInfo(expense_item = mtitle, expense_cost = mdescription, date_added = d, expense_cat = expcat)
+        tolist = ExpenseInfo(expense_item = mtitle, expense_cost = mdescription, date_added = d, expense_cat = expcat, user = request.user)
         tolist.save()
     if typer == 'del':
-        a = ExpenseInfo.objects.all()
+        a = ExpenseInfo.objects.filter(user = request.user)
         a[idz - 1].delete()
     if typer == 'clear':
-        a = ExpenseInfo.objects.all()
+        a = ExpenseInfo.objects.filter(user = request.user)
         a.delete()
     emp ={}
-    tasks = ExpenseInfo.objects.all()
+    tasks = ExpenseInfo.objects.filter(user = request.user)
     for i in tasks:
         if i.expense_cat in emp:
             emp[i.expense_cat] += i.expense_cost
@@ -70,20 +75,18 @@ def goals(request, idz, typer):
     if request.POST and typer == 'add':
         goal_name  = request.POST.get('title', 'default')
         goal_prog = request.POST.get('goalprog', 'default')
-        goal = Goals(Goals_desc = goal_name, Goals_prog = goal_prog)
+        goal = Goals(Goals_desc = goal_name, Goals_prog = goal_prog, user = request.user)
         goal.save()
+    a = Goals.objects.filter(user = request.user)
     if request.POST and typer == 'edit':
-        a = Goals.objects.all()
         b = Goals.objects.get(Goals_desc = a[idz - 1].Goals_desc)
         b.Goals_prog = request.POST.get('goalProg')
         b.save()
-    if typer == 'del' and len(Goals.objects.all()) != 0:
-        a = Goals.objects.all()
+    if typer == 'del' and len(a) != 0:
         a[idz - 1].delete()
     if typer == 'clear':
-        a = Goals.objects.all()
         a.delete()
-    tasks = Goals.objects.all()
+    tasks = Goals.objects.filter(user = request.user)
     
     sum = 0
     if len(tasks) != 0:
@@ -94,27 +97,54 @@ def goals(request, idz, typer):
     return render(request, 'assistant/goals.html', params)
 
 def birthday(request, idz, typer):
-    tasks = Bday.objects.all()
+    if request.POST and typer == 'wish':
+        senemail = request.POST.get('useremail')
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        s.starttls()
+        s.login(senemail, request.POST.get('userpass'))
+        msg = EmailMessage()
+        msg.set_content("Wish You Many Many Happy returns of the day")
+        msg['Subject'] = "Birthday Wish"
+        msg['From'] = senemail
+        msg['To'] = request.POST.get('friendsemail')
+        s.send_message(msg)
+        s.quit()
+        messages.success(request, "Email sent successfully")
+
+    if typer == 'del':
+        tasks = Bday.objects.filter(user = request.user)
+        tasks[idz - 1].delete()
+        tasks = Bday.objects.filter(user = request.user)
+        params = {'tasklist' : tasks}
+        return render(request, 'assistant/bday.html', params)
+
+        tasks = Bday.objects.filter(user = request.user)
     if request.POST and typer == 'add':
         fr_name = request.POST.get('frename', 'default')
         fr_date = request.POST.get('birthdate')
         d = datetime.date(int(fr_date[:4]), int(fr_date[5:7]), int(fr_date[8:10]))
-        temp = Bday(bday_name = fr_name, bday_date = d)
+        temp = Bday(bday_name = fr_name, bday_date = d, user = request.user)
         temp.save()
+
         messages.success(request, fr_name +"'s birth date saved successfully")
-        tasks = Bday.objects.all()
-        tasks = list(tasks)
-        for i in range(len(tasks)):
-            min_idx = i
-            for j in range(i+1, len(tasks)):
-                if tasks[min_idx].bday_date.month >= tasks[j].bday_date.month: 
-                    min_idx = j      
-            tasks[i], tasks[min_idx] = tasks[min_idx], tasks[i]
-        presentmonth = datetime.date.today().month
-        for i in range(len(tasks)):
-            if tasks[i].bday_date.month <= presentmonth:
-                break
-        tasks = tasks[i:] + tasks[:i]
+
+    tasks = Bday.objects.filter(user = request.user)
+    tasks = list(tasks)
+            
+    for i in range(len(tasks)):
+        min_idx = i
+        for j in range(i+1, len(tasks)):
+            if (tasks[min_idx].bday_date.month > tasks[j].bday_date.month): 
+               min_idx = j      
+        tasks[i], tasks[min_idx] = tasks[min_idx], tasks[i]
+        
+    presentmonth = datetime.date.today().month
+    i = 0
+    for i in range(len(tasks)):
+        if tasks[i].bday_date.month >= presentmonth:
+            break
+    tasks = tasks[i:] + tasks[:i]
+    
     todaybday = []
     flag = 0
     for i in tasks:
@@ -133,8 +163,6 @@ def birthday(request, idz, typer):
 def miniGoogle(request, task):
     if request.POST and task == 'email':
         senemail = request.POST.get('sendersemail')
-        print(senemail, request.POST.get('senderspass'), request.POST.get('emailmessage', ''), request.POST.get('subject', ''), request.POST.get('recipientsemail'))
-
         s = smtplib.SMTP('smtp.gmail.com', 587)
         s.starttls()
         s.login(senemail, request.POST.get('senderspass'))
@@ -150,11 +178,35 @@ def miniGoogle(request, task):
         query = request.POST.get('searchtext')
         query = query + " wikipedia"
         results = wikipedia.summary(query, sentences=3)
-        print(query)
-        print(results)
         params = {'tasklist':results}
         return render(request, 'assistant/minigoogle.html', params)
     return render(request, 'assistant/minigoogle.html')
+
+
+def passw(request, idz, typer):
+    #key = Fernet.generate_key()
+    #cipher_suite = Fernet(key)
+    if request.POST and typer == 'add':
+        name = request.POST.get('appname')
+        password = request.POST.get('apppass')
+        #print(type(password))
+        #encoded_text = cipher_suite.encrypt(bytes(password, 'utf-8'))
+        a = Passstore(account = name, account_pass = password, user = request.user)
+        a.save()
+    tasks = Passstore.objects.filter(user = request.user)
+    params = {'tasklist' : tasks}
+    if request.POST and typer == 'tell':
+        app = request.POST.get('retrievepass')
+        for i in tasks:
+            if i.account == app:
+                password = i.account_pass
+                break
+        #print(type(password))
+        #print(password)
+        #decoded_text = cipher_suite.decrypt(password)
+        params = {'tasklist' : tasks, 'password' : password}
+    return render(request, 'assistant/password.html', params)
+
 
 def Login(request):
     if request.method == 'POST':
