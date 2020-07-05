@@ -16,7 +16,7 @@ import datetime
 import smtplib
 from email.message import EmailMessage
 import wikipedia
-#from cryptography.fernet import Fernet
+import base64
 
 
 # Create your views here.
@@ -184,14 +184,11 @@ def miniGoogle(request, task):
 
 
 def passw(request, idz, typer):
-    #key = Fernet.generate_key()
-    #cipher_suite = Fernet(key)
     if request.POST and typer == 'add':
         name = request.POST.get('appname')
         password = request.POST.get('apppass')
-        #print(type(password))
-        #encoded_text = cipher_suite.encrypt(bytes(password, 'utf-8'))
-        a = Passstore(account = name, account_pass = password, user = request.user)
+        password_b64 = base64.b64encode(password.encode())
+        a = Passstore(account = name, account_pass = password_b64.decode(), user = request.user)
         a.save()
     tasks = Passstore.objects.filter(user = request.user)
     params = {'tasklist' : tasks}
@@ -201,10 +198,8 @@ def passw(request, idz, typer):
             if i.account == app:
                 password = i.account_pass
                 break
-        #print(type(password))
-        #print(password)
-        #decoded_text = cipher_suite.decrypt(password)
-        params = {'tasklist' : tasks, 'password' : password}
+        password = base64.b64decode(password.encode())
+        params = {'tasklist' : tasks, 'password' : password.decode()}
     return render(request, 'assistant/password.html', params)
 
 
