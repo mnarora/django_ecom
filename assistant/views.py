@@ -214,8 +214,8 @@ def Login(request):
             messages.success(request, "Successfully logged In")
             return redirect('assistant')
         else:
-            return HttpResponse('Invalid Credentials')
-    return HttpResponse('404 Not Found')
+            messages.error(request, "Invalid Credentials")
+    return redirect('assistant')
 
 def Signup(request):
     if request.method == 'POST':
@@ -242,7 +242,7 @@ def Signup(request):
         messages.success(request, "Your Account has been successfully created")
         return redirect('assistant')
     else:
-        return HttpResponse('404-Not Found')
+        return redirect('assistant')
 
 def Logout(request):
     logout(request)
