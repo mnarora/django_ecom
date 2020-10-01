@@ -46,6 +46,3 @@ class Bday(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE, default=None)
     def __str__(self):
         return self.bday_name
-
-class Images(models.Model):
-    sample_image = models.ImageField(upload_to = 'assistant/images')

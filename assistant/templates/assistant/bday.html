@@ -55,7 +55,7 @@ body {
                           </button>
                 </td>
                 <td>
-                    <button class = "btn btn-primary ">Delete</button>
+                  <a href = "{% url 'biday' idz=forloop.counter typer='del' %}"><button class = "btn btn-primary ">Delete</button></a>
                 </td>
             </tr> 
                 {% endfor %}

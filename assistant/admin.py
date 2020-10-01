@@ -5,9 +5,7 @@ from .models import ExpenseInfo
 from .models import Goals
 from .models import Passstore
 from .models import Bday
-from .models import Images
 
-admin.site.register(Images)
 admin.site.register(task)
 admin.site.register(todolist)
 admin.site.register(ExpenseInfo)

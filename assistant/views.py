@@ -7,7 +7,6 @@ from .models import ExpenseInfo
 from .models import Goals
 from .models import Bday
 from .models import Passstore
-from .models import Images
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -22,8 +21,7 @@ import base64
 # Create your views here.
 def assistant(request):
     tasks = task.objects.all()
-    ima = Images.objects.all()
-    params ={'tasklist' : tasks, 'image':ima}
+    params ={'tasklist' : tasks}
     return render(request, 'assistant/index.html', params)
 
 def todoList(request, idz, typer):
